@@ -1,7 +1,10 @@
 import os
 import subprocess
 import math
+import time
 from multiprocessing import Pool
+
+ti = time.time()
 
 def process_file(input):
     segment = 5  # 每段音频的长度，单位为秒
@@ -21,10 +24,11 @@ def process_file(input):
             subprocess.call(f'ffmpeg -i {input_path} -ss {start} -t {segment} -acodec copy {output_path}', shell=True)
             print(f'裁剪音频：{output_path}')
             counter += 1
-        new_output_dir = os.path.join(os.path.dirname(output_dir), os.path.basename(input_path))
-        os.rename(output_dir, new_output_dir)
-        print(f'移动文件夹：{output_dir} -> {new_output_dir}')
+#        new_output_dir = os.path.join(os.path.dirname(output_dir), os.path.basename(input_path))
+#        os.rename(output_dir, new_output_dir)
+#        print(f'移动文件夹：{output_dir} -> {new_output_dir}')
 
 if __name__ == '__main__':
     with Pool() as p:
         p.map(process_file, os.listdir('music'))
+print("%f秒" % round(time.time() - ti, 4))
